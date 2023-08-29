@@ -1,0 +1,2 @@
+gherkin-official==24.1.0
+pyinstaller==5.13.2
