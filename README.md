@@ -9,7 +9,7 @@ This tool allows users to parse Gherkin feature files and export the parsed data
 - Excel Sheet Formatting: Customize the structure and appearance of the generated Excel sheets based on a provided configuration.
 - Configurable Directory Structure: Define how your directory structure should be reflected in the Excel output.
 - Validation Step Parsing: Use the provided parsing utility to match and extract data from the steps in the feature files.
-- 
+
 ## Prerequisites
 Ensure you have Python (3.7 or higher) installed on your machine.
 
