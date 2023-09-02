@@ -1,0 +1,3 @@
+the status code should be {int}
+I compare the JSON response against file {string} using {string} as unique key
+the JSON response field {string} should (equal|not equal|compare|not compare) value {string}

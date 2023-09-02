@@ -1,6 +1,7 @@
 import re
 
-def get_dir_path_elements(directory_path:str) -> dict[int, str]:
+
+def get_dir_path_elements(directory_path: str) -> dict[int, str]:
     """
     Parse the given directory path to capture each element and its position.
 
@@ -17,7 +18,10 @@ def get_dir_path_elements(directory_path:str) -> dict[int, str]:
     elements = re.split(r"[/\\]", directory_path)
     return {index: elem for index, elem in enumerate(elements)}
 
-def combine_dicts(config_dict: dict[int, str], feature_path_dict:dict[int, str]) -> dict[str, str]:
+
+def combine_dicts(
+    config_dict: dict[int, str], feature_path_dict: dict[int, str]
+) -> dict[str, str]:
     """
     Combine two dictionaries based on the structure defined in config_dict and the values in feature_path_dict.
 
@@ -32,12 +36,17 @@ def combine_dicts(config_dict: dict[int, str], feature_path_dict:dict[int, str])
     >>> combine_dicts({0: 'type', 1: 'service', 2: '.'}, {0: "api", 1: "products", 2: "http", 3: "feature.name"})
     {'type': 'api', 'service': 'products', '.': 'http/feature.name'}
     """
-    result:dict[str, str] = {config_dict[key]: feature_path_dict.get(key, '') for key in config_dict}
+    result: dict[str, str] = {
+        config_dict[key]: feature_path_dict.get(key, "") for key in config_dict
+    }
     # Making sure the '.' key combines the rest of the path
-    dot_index = list(config_dict.values()).index('.')
+    dot_index = list(config_dict.values()).index(".")
     if dot_index in feature_path_dict:
-        result['.'] = '/'.join([value for key, value in feature_path_dict.items() if key >= dot_index])
+        result["."] = "/".join(
+            [value for key, value in feature_path_dict.items() if key >= dot_index]
+        )
     return result
+
 
 def generate_sheet_name(format_string: str, combined_dict: dict[str, str]) -> str:
     """
@@ -57,3 +66,33 @@ def generate_sheet_name(format_string: str, combined_dict: dict[str, str]) -> st
     for key, value in combined_dict.items():
         format_string = format_string.replace(key, value)
     return format_string
+
+
+def parse_validation_steps_file(file_path: str) -> str:
+    """
+    Parse a file containing validation steps and convert its content to regex format.
+    
+    Args:
+    - file_path: Path to the file containing the validation steps.
+
+    Returns:
+    - A regex pattern string for the validation steps.
+    """
+    # Define a mapping for expected argument placeholders to their regex counterparts
+    argument_map: dict[str, str] = {
+        "{int}": r"(\d+|<\w+>)",
+        "{string}": r'(".*?"|<\w+>)',
+    }
+
+    # Read the validation steps from the file
+    with open(file_path, "r") as file:
+        txt_steps: list[str] = [line.strip() for line in file.readlines()]
+
+    # Join the steps with a '|' (or) to create a regex pattern
+    regex_steps = "|".join(txt_steps)
+
+    # Replace placeholders in steps with their corresponding regex patterns
+    for arg, regex in argument_map.items():
+        regex_steps = regex_steps.replace(arg, regex)
+        
+    return regex_steps
