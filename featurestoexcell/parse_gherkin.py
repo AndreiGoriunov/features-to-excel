@@ -1,6 +1,5 @@
 import os
 
-from . import config
 from gherkin.parser import Parser
 
 
@@ -25,29 +24,16 @@ def extract_tags(parsed_document):
     return feature_tags, scenario_tags
 
 
-def get_list_of_feature_paths(dir_path) -> list[str]:
-    """
-    Walks the directory, putting all feature files into a list.
-
-    :param dir_path: The directory to start walking from.
-    """
-    feature_paths = []
-    for root, _, files in os.walk(dir_path):
-        for name in files:
-            _path = os.path.join(root, name)
-            if _path.lower().endswith(".feature"):
-                feature_paths.append(_path)
-    return [path.replace(config.FEATURE_DIR, "").lstrip(os.sep) for path in feature_paths]
-
-
-def run():
-    features_paths: list[str] = get_list_of_feature_paths(config.FEATURE_DIR)
+def run(dir_path: str):
+    features_paths: list[str] = get_list_of_file_paths(dir_path)
     for _path in features_paths:
-        gherkin_path = os.path.join(config.FEATURE_DIR, _path)
-        parsed_document = parse_gherkin_file(gherkin_path)
+        print(_path)
+    # for _path in features_paths:
+    #     gherkin_path = os.path.join(dir_path, _path)
+    #     parsed_document = parse_gherkin_file(gherkin_path)
 
-        feature_tags, scenario_tags = extract_tags(parsed_document)
+    #     feature_tags, scenario_tags = extract_tags(parsed_document)
 
-        print("Feature Tags:", feature_tags)
-        for scenario, tags in scenario_tags.items():
-            print(f"Tags for Scenario '{scenario}':", tags)
+    #     print("Feature Tags:", feature_tags)
+    #     for scenario, tags in scenario_tags.items():
+    #         print(f"Tags for Scenario '{scenario}':", tags)
